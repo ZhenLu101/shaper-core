@@ -1,0 +1,5 @@
+rootProject.name = 'shaper-core'
+
+include 'server'
+include 'client'
+include 'model'

@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+    <configuration default="false" name="ServerApplication" type="Application" factoryName="Application">
+        <option name="MAIN_CLASS_NAME" value="com.shaper.core.server.ServerApplication" />
+        <module name="api_main" />
+        <option name="VM_PARAMETERS" value="-Xmx512m -Ddw.logging.appenders[0].threshold=OFF -Ddw.logging.appenders[1].threshold=INFO -Ddw.server.requestLog.appenders[0].threshold=INFO" />
+        <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
+        <method />
+    </configuration>
+</component>

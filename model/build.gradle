@@ -1,0 +1,12 @@
+
+dependencies {
+    implementation group: 'org.hibernate', name: 'hibernate-validator', version: "$hibernateValidatorVersion"
+    implementation(
+            "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion",
+            "com.fasterxml.jackson.core:jackson-core:$jacksonVersion",
+            "com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion",
+            "javax.validation:validation-api:$javaxValidationVersion"
+    )
+
+    testImplementation("org.apache.commons:commons-lang3:$apacheCommonsLangVersion")
+}

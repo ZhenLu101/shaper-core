@@ -1,0 +1,71 @@
+plugins {
+    id "com.avast.gradle.docker-compose" version "$gradleDockerComposeVersion"
+    id 'com.faendir.gradle.release' version "$gradleReleaseVersion"
+    id "com.github.ben-manes.versions" version "$gradleBenManesVersion"
+    id "com.github.johnrengelman.shadow" version "$gradleShadowVersion"
+    id "com.github.spotbugs" version "$gradleSpotbugsVersion"
+    id 'idea'
+    id 'maven-publish'
+    id "nebula.ospackage" version "$gradleNebulaOspackageVersion"
+}
+
+apply plugin: 'java'
+
+allprojects {
+    group = 'com.shaper.core'
+    ext.artifactName = "${project.name}"
+
+    repositories {
+        mavenCentral()
+    }
+}
+
+subprojects {
+    apply plugin: 'checkstyle'
+    apply plugin: 'com.github.ben-manes.versions'
+    apply plugin: 'com.github.spotbugs'
+    apply plugin: 'jacoco'
+    apply plugin: 'java'
+    apply plugin: 'maven'
+    apply plugin: 'maven-publish'
+    apply plugin: 'pmd'
+
+    afterReleaseBuild.dependsOn publish
+
+    dependencies {
+        implementation("org.jooq:jool:$joolJooqVersion")
+
+        testImplementation(
+                "junit:junit:$junitVersion",
+                "org.assertj:assertj-core:$assertJVersion",
+                "org.mockito:mockito-core:$mockitoVersion",
+        )
+    }
+
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+
+    checkstyle {
+        toolVersion = "${checkstyleToolVersion}"
+        configFile = new File("${rootDir}/build-config/checkstyle", "checkstyle.xml")
+        configProperties = [
+                'checkstyle.cache.file': "${buildDir}/checkstyle.cache",
+                'checkstyleConfigDir'  : "${rootDir}/build-config/checkstyle"
+        ]
+        ignoreFailures = false
+        showViolations = true
+    }
+
+    publishing {
+        repositories {
+            maven {
+                def repository = project.version.endsWith('-SNAPSHOT') ? 'snapshots-new' : 'release-candidates'
+                credentials {
+                    username System.getenv("NEXUS_USERNAME")
+                    password System.getenv("NEXUS_PASSWORD")
+                }
+                url "${nexusServer}/repository/${repository}"
+            }
+        }
+    }
+}
